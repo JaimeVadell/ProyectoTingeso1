@@ -20,11 +20,11 @@ public class Estudiante {
     private String rut_estudiante;
 
     private String nombre;
-    private String Apellido;
+    private String apellido;
     private LocalDate fechaNacimiento;
     private ETipoColegio tipoColegio;
     private String nombreColegio;
-    private int anioEgreso;
+    private LocalDate anioEgreso;
     @OneToMany(mappedBy = "estudiante")
     private List<Prueba> pruebas;
 

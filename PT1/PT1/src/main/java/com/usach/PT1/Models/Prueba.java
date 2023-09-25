@@ -1,6 +1,8 @@
 package com.usach.PT1.Models;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -16,6 +18,9 @@ import java.time.LocalDate;
 public class Prueba {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long IdPrueba;
+
+    @Max(value = 1000, message = "El puntaje máximo permitido es 100")
+    @Min(value = 0, message = "El puntaje mínimo permitido es 0")
     private int puntaje;
     private LocalDate diaPrueba;
 
