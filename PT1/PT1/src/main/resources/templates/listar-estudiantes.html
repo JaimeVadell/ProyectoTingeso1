@@ -1,0 +1,37 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Listar Estudiantes</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+</head>
+<body>
+<div class="container-sm">
+  <h1>Lista de Estudiantes</h1>
+  <table class="table">
+    <thead class="thead-dark">
+    <tr>
+      <th>RUT</th>
+      <th>Nombre</th>
+      <th>Apellido</th>
+      <th>Fecha de Nacimiento</th>
+      <th>Tipo de Colegio</th>
+      <th>Nombre del Colegio</th>
+      <th>Año de Egreso</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="estudiante : ${estudiantes}">
+      <td th:text="${estudiante.rut_estudiante}"></td>
+      <td th:text="${estudiante.nombre}"></td>
+      <td th:text="${estudiante.apellido}"></td>
+      <td th:text="${estudiante.fechaNacimiento}"></td>
+      <td th:text="${estudiante.tipoColegio}"></td>
+      <td th:text="${estudiante.nombreColegio}"></td>
+      <td th:text="${estudiante.anioEgreso}"></td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+</body>
+</html>

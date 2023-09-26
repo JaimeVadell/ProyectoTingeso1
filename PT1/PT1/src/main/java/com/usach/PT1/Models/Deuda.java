@@ -1,6 +1,7 @@
 package com.usach.PT1.Models;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import jdk.jfr.Name;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -17,9 +18,13 @@ public class Deuda {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long idDeuda;
 
+    @NotNull
     private int montoDeuda;
+    @NotNull
     private int CuotasRestantes;
+    @NotNull
     private int precioCuota;
+    @NotNull
     private int cuotasConRetraso;
     @OneToOne
     @JoinColumn(name = "rut_estudiante", referencedColumnName = "rut_estudiante")

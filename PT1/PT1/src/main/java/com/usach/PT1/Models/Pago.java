@@ -1,6 +1,7 @@
 package com.usach.PT1.Models;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -17,7 +18,9 @@ import java.time.LocalDate;
 public class Pago {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long idPago;
+    @NotNull
     private int montoPagado;
+    @NotNull
     private LocalDate fechaPago;
 
     @ManyToOne

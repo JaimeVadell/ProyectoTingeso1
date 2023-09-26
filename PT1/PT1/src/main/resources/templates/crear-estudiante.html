@@ -1,0 +1,50 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Crear Estudiante</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+</head>
+<body>
+<div class="container-sm">
+  <h1>Crear Nuevo Estudiante</h1>
+  <form method="post" th:object="${estudiante}" th:action="@{/crear-estudiante}">
+    <div class="form-group">
+      <label for="rut_estudiante">RUT Estudiante:</label>
+      <input type="text" class="form-control" id="rut_estudiante" name="rut_estudiante" th:field="*{rut_estudiante}" required>
+    </div>
+    <div class="form-group">
+      <label for="nombre">Nombre:</label>
+      <input type="text" class="form-control" id="nombre" name="nombre" th:field="*{nombre}" required>
+    </div>
+    <div class="form-group">
+      <label for="apellido">Apellido:</label>
+      <input type="text" class="form-control" id="apellido" name="apellido" th:field="*{apellido}" required>
+    </div>
+    <div class="form-group">
+      <label for="fechaNacimiento">Fecha de Nacimiento:</label>
+      <input type="date" class="form-control" id="fechaNacimiento" name="fechaNacimiento" th:field="*{fechaNacimiento}" required>
+    </div>
+
+    <div class="form-group">
+      <label for="tipoColegio">Tipo de Colegio:</label>
+      <select name="tipoColegio">
+        <option th:each="colorOpt : ${T(com.usach.PT1.Models.ETipoColegio).values()}"
+                th:value="${colorOpt}" th:text="${colorOpt}"></option>
+      </select>
+
+
+    </div>
+    <div class="form-group">
+      <label for="nombreColegio">Nombre del Colegio:</label>
+      <input type="text" class="form-control" id="nombreColegio" name="nombreColegio" th:field="*{nombreColegio}" required>
+    </div>
+    <div class="form-group">
+      <label for="anioEgreso">Año de Egreso:</label>
+      <input type="date" class="form-control" id="anioEgreso" name="anioEgreso" th:field="*{anioEgreso}" required>
+    </div>
+    <button type="submit" class="btn btn-primary">Crear Estudiante</button>
+  </form>
+</div>
+</body>
+</html>
