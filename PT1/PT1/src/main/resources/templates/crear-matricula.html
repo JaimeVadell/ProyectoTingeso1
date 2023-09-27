@@ -1,0 +1,60 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Crear Matrícula</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+</head>
+<body>
+<div class="container-sm">
+  <h1>Crear Matrícula</h1>
+  <form method="post" th:action="@{/matricula/crear}">
+    <div class="mb-3">
+      <label for="rutEstudiante" class="form-label">RUT Estudiante:</label>
+      <input type="text" class="form-control" id="rutEstudiante" name="rutEstudiante" th:value="${estudiante.rut_estudiante}" readonly>
+      <!-- Agrega el campo oculto "rut" -->
+      <input type="hidden" name="rut" th:value="${estudiante.rut_estudiante}">
+    </div>
+    <div class="mb-3">
+      <label for="pago">Tipo de pago:</label>
+      <select name="pago" id="pago">
+        <option th:each="colorOpt : ${T(com.usach.PT1.Models.EPago).values()}"
+                th:value="${colorOpt}" th:text="${colorOpt}"></option>
+      </select>
+    </div>
+    <div class="mb-3" id="cuotasDiv" style="display: none;">
+      <label for="numeroCuotas" class="form-label">Número de Cuotas (máximo 10):</label>
+      <input type="number" class="form-control" id="numeroCuotas" name="numeroCuotas" max="10">
+    </div>
+    <button type="submit" class="btn btn-primary">Crear Matrícula</button>
+  </form>
+
+  <script>
+    // Captura el elemento select
+    var tipoPagoSelect = document.getElementById("pago");
+    // Captura el elemento div del número de cuotas
+    var cuotasDiv = document.getElementById("cuotasDiv");
+
+    // Función para mostrar u ocultar el campo de cuotas según la selección
+    function mostrarOcultarCuotas() {
+      var tipoPagoSeleccionado = tipoPagoSelect.value;
+      if (tipoPagoSeleccionado === "CUOTAS") {
+        cuotasDiv.style.display = "block"; // Muestra el campo de cuotas
+      } else {
+        cuotasDiv.style.display = "none"; // Oculta el campo de cuotas
+        // Si es "CONTADO", establece el valor del número de cuotas en 0
+        if (tipoPagoSeleccionado === "CONTADO") {
+          document.getElementById("numeroCuotas").value = "0";
+        }
+      }
+    }
+
+    // Asigna el evento "change" al select para llamar a la función cuando cambia la selección
+    tipoPagoSelect.addEventListener("change", mostrarOcultarCuotas);
+
+    // Llama a la función al cargar la página para inicializar el estado
+    mostrarOcultarCuotas();
+  </script>
+</div>
+</body>
+</html>

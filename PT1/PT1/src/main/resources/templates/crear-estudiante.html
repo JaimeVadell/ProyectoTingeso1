@@ -8,7 +8,7 @@
 <body>
 <div class="container-sm">
   <h1>Crear Nuevo Estudiante</h1>
-  <form method="post" th:object="${estudiante}" th:action="@{/crear-estudiante}">
+  <form method="post" th:object="${estudiante}" th:action="@{/estudiante/crear-estudiante}">
     <div class="form-group">
       <label for="rut_estudiante">RUT Estudiante:</label>
       <input type="text" class="form-control" id="rut_estudiante" name="rut_estudiante" th:field="*{rut_estudiante}" required>

@@ -29,6 +29,7 @@ public class Matricula {
     @NotNull
     private boolean estadoMatricula;
 
+
     @OneToOne
     @JoinColumn(name = "rut_estudiante", referencedColumnName = "rut_estudiante")
     private Estudiante estudiante;

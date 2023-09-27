@@ -18,6 +18,7 @@
       <th>Tipo de Colegio</th>
       <th>Nombre del Colegio</th>
       <th>Año de Egreso</th>
+      <th>Acciones</th>
     </tr>
     </thead>
     <tbody>
@@ -29,6 +30,12 @@
       <td th:text="${estudiante.tipoColegio}"></td>
       <td th:text="${estudiante.nombreColegio}"></td>
       <td th:text="${estudiante.anioEgreso}"></td>
+      <td>
+        <!-- Verifica si el estudiante tiene matrícula -->
+        <a th:if="${estudiante.matricula != null}" th:href="@{'/ver-matricula/' + ${estudiante.rut_estudiante}}" class="btn btn-primary">Ver Matrícula</a>
+        <!-- Si no tiene matrícula, muestra el botón "Crear Matrícula" -->
+        <a th:if="${estudiante.matricula == null}" th:href="@{'/matricula/crear/' + ${estudiante.rut_estudiante}}" class="btn btn-success">Crear Matrícula</a>
+      </td>
     </tr>
     </tbody>
   </table>

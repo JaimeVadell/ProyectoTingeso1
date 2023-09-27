@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class EstudianteService {
     @Autowired
@@ -27,6 +29,16 @@ public class EstudianteService {
         return "Estudiante Creado";
 
         
+    }
+    public Optional<Estudiante> buscarEstudianteRutsinFormato(String rutEstudiante){
+        Optional<Estudiante> estudianteOptional;
+        VerificadorRut verificadorRut = new VerificadorRut();
+        rutEstudiante = verificadorRut.validarRut(rutEstudiante);
+        if(rutEstudiante.equals("")){
+            estudianteOptional = Optional.empty();
+            return estudianteOptional;
+        }
+        return estudianteRepository.findById(rutEstudiante);
     }
 
 

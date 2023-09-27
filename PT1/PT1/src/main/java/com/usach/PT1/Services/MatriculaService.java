@@ -1,17 +1,16 @@
 package com.usach.PT1.Services;
 
-import com.usach.PT1.Models.EPago;
-import com.usach.PT1.Models.ETipoColegio;
-import com.usach.PT1.Models.Estudiante;
-import com.usach.PT1.Models.Matricula;
+import com.usach.PT1.Models.*;
 import com.usach.PT1.Repositories.EstudianteRepository;
 import com.usach.PT1.Repositories.MatriculaRepository;
+import com.usach.PT1.Repositories.PagoRepository;
 import com.usach.PT1.Utils.VerificadorRut;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -21,6 +20,9 @@ public class MatriculaService {
 
     @Autowired
     EstudianteRepository estudianteRepository;
+
+    @Autowired
+    PagoRepository pagoRepository;
 
     @Autowired
     DeudaService deudaService;
@@ -52,10 +54,9 @@ public class MatriculaService {
             LocalDate fechaActual = LocalDate.now();
             long diferenciaEnDias = ChronoUnit.DAYS.between(anioEgreso, fechaActual);
             double aniosDesdeEgreso = diferenciaEnDias / 365.25;
-
+            boolean estadoMatricula = false;
             int MontoMatricula = 1_570_000;
             int Descuento = 0;
-            boolean estadoMatricula = false;
             if (pago == EPago.CUOTAS) {
                 if (tipoColegio == ETipoColegio.MUNICIPAL) {
                     if (numeroCuotas > 10) {
@@ -86,6 +87,16 @@ public class MatriculaService {
             }
             else if(pago == EPago.CONTADO){
                 Descuento += 50;
+                Pago pagoContado = Pago.builder()
+                        .fechaPago(fechaActual)
+                        .montoPagado(MontoMatricula - (MontoMatricula * Descuento / 100))
+                        .estudiante(estudiante)
+                        .build();
+                pagoRepository.save(pagoContado);
+                List<Pago> pagos = estudiante.getPagos();
+                pagos.add(pagoContado);
+                estudiante.setPagos(pagos);
+                estudianteRepository.save(estudiante);
                 estadoMatricula = true;
             }
 
@@ -105,10 +116,37 @@ public class MatriculaService {
             if(pago == EPago.CONTADO){
                 deuda = 0;
             }
-            deudaService.CrearDeudaEstudiante(deuda, numeroCuotas, deuda/numeroCuotas, estudiante);
+            if(numeroCuotas == 0){
+                deudaService.CrearDeudaEstudiante(deuda, numeroCuotas, 0, estudiante);
+            }
+            else if(numeroCuotas > 0){
+                deudaService.CrearDeudaEstudiante(deuda, numeroCuotas, deuda/numeroCuotas, estudiante);
+
+            }
             return "Matricula Creada";
         }
     }
+
+    public Optional<Matricula> obtenerMatriculaPorRut(String rutEstudiante) {
+        Optional<Matricula> matriculaOptional = Optional.empty();
+        VerificadorRut verificadorRut = new VerificadorRut();
+        rutEstudiante = verificadorRut.validarRut(rutEstudiante);
+
+        if(rutEstudiante.equals("")){
+            return matriculaOptional;
+        }
+
+        Optional<Estudiante> estudianteOptional = estudianteRepository.findById(rutEstudiante);
+        if(!estudianteOptional.isPresent() || estudianteOptional.get().getMatricula() == null){
+            return matriculaOptional;
+        }
+        else{
+            Estudiante estudiante = estudianteOptional.get();
+            Matricula matricula = estudiante.getMatricula();
+            return Optional.of(matricula);
+        }
+    }
+
 
 
 
