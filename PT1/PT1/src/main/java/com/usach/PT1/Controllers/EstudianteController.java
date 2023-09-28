@@ -5,7 +5,7 @@ import org.springframework.ui.Model;
 import com.usach.PT1.Models.Estudiante;
 import com.usach.PT1.Repositories.EstudianteRepository;
 import com.usach.PT1.Services.EstudianteService;
-import com.usach.PT1.Services.MatriculaService;
+import com.usach.PT1.Services.ArancelService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,7 +17,7 @@ public class EstudianteController {
     @Autowired
     EstudianteService estudianteService;
     @Autowired
-    MatriculaService matriculaService;
+    ArancelService arancelService;
     @Autowired
     EstudianteRepository estudianteRepository;
 

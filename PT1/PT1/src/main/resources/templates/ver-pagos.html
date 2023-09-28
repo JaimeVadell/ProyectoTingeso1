@@ -1,0 +1,43 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Ver Pagos</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+</head>
+<body>
+<div class="container-sm">
+    <h1>Lista de Pagos</h1>
+    <table class="table">
+        <thead class="thead-dark">
+        <tr>
+            <th>Número de Pago</th>
+            <th>Monto Pagado</th>
+            <th>Fecha de Pago</th>
+            <th>Tipo de Pago</th>
+        </tr>
+        </thead>
+        <tbody>
+        <!-- Verifica si el estudiante tiene pagos -->
+        <tr th:if="${pagos.isEmpty()}">
+            <td colspan="4">El estudiante no ha realizado pagos.</td>
+        </tr>
+        <!-- Si el estudiante tiene pagos, muestra la tabla -->
+        <tr th:each="pago, pagoStat : ${pagos}">
+            <td th:text="${pagoStat.index + 1}"></td>
+            <td th:text="${pago.montoPagado}"></td>
+            <td th:text="${pago.fechaPago}"></td>
+            <td th:text="${pago.tipoPago == T(com.usach.PT1.Models.ETipoPago).CUOTA_ARANCEL ? 'Pago de Arancel' : 'Pago de Matrícula'}"></td>
+        </tr>
+        </tbody>
+    </table>
+    <a th:href="@{'/estudiante/listar-estudiantes'}" class="btn btn-primary">Volver a la Lista de Estudiantes</a>
+</div>
+</body>
+</html>
+
+
+
+
+
+

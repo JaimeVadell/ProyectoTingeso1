@@ -8,7 +8,7 @@
 <body>
 <div class="container-sm">
   <h1>Crear Matrícula</h1>
-  <form method="post" th:action="@{/matricula/crear}">
+  <form method="post" th:action="@{/arancel/crear}">
     <div class="mb-3">
       <label for="rutEstudiante" class="form-label">RUT Estudiante:</label>
       <input type="text" class="form-control" id="rutEstudiante" name="rutEstudiante" th:value="${estudiante.rut_estudiante}" readonly>
@@ -18,7 +18,7 @@
     <div class="mb-3">
       <label for="pago">Tipo de pago:</label>
       <select name="pago" id="pago">
-        <option th:each="colorOpt : ${T(com.usach.PT1.Models.EPago).values()}"
+        <option th:each="colorOpt : ${T(com.usach.PT1.Models.EMedioPago).values()}"
                 th:value="${colorOpt}" th:text="${colorOpt}"></option>
       </select>
     </div>

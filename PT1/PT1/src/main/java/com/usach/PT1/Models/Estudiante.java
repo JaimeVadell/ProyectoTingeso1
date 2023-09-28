@@ -38,7 +38,7 @@
     private List<Prueba> pruebas;
 
     @OneToOne(mappedBy = "estudiante")
-    private Matricula matricula;
+    private Arancel arancel;
 
     @OneToMany(mappedBy = "estudiante")
     private List<Pago> pagos;
@@ -46,7 +46,7 @@
     @OneToOne(mappedBy = "estudiante")
     private Deuda deuda;
 
-
-
+    @OneToMany(mappedBy = "estudiante")
+    private List<Cuota> cuotas;
 
 }

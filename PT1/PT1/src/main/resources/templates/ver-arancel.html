@@ -1,0 +1,39 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Ver Arancel</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+</head>
+<body>
+<div class="container-sm">
+    <h1>Detalles del Arancel</h1>
+    <table class="table">
+        <tbody>
+        <tr>
+            <th>Medio de Pago:</th>
+            <td th:text="${arancel.pago}"></td>
+        </tr>
+        <tr>
+            <th>Fecha de Creación:</th>
+            <td th:text="${arancel.fechaCreacionArancel}"></td>
+        </tr>
+        <tr>
+            <th>Monto Total:</th>
+            <td th:text="${arancel.montoTotalArancel}"></td>
+        </tr>
+        <tr>
+            <th>Número de Cuotas:</th>
+            <td th:text="${arancel.numeroCuotas}"></td>
+        </tr>
+        <tr>
+            <th>Estado de Pago:</th>
+            <td th:text="${arancel.estadoDePagoArancel ? 'Pagado' : 'Pendiente'}"></td>
+        </tr>
+        <!-- Puedes agregar más detalles aquí si es necesario -->
+        </tbody>
+    </table>
+    <a th:href="@{'/estudiante/listar-estudiantes'}" class="btn btn-primary">Volver a la Lista de Estudiantes</a>
+</div>
+</body>
+</html>

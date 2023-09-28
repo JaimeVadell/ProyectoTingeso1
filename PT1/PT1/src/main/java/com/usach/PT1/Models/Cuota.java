@@ -1,36 +1,30 @@
 package com.usach.PT1.Models;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
-@Data
+
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@Data
 @Entity
-@Table(name = "Matricula")
-public class Matricula {
+@Table(name = "Cuota")
+public class Cuota {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long idMatricula;
-    @NotNull
-    private EPago pago;
-    @NotNull
-    private LocalDate fechaMatricula;
-    @NotNull
-    private int montoMatricula;
-    @NotNull
-    private int numeroCuotas;
-    @NotNull
-    private boolean estadoMatricula;
+    private long idCuota;
 
+    private int montoCuota;
 
-    @OneToOne
+    private LocalDate plazoMaximoPago;
+
+    private boolean pagada;
+
+    @ManyToOne
     @JoinColumn(name = "rut_estudiante", referencedColumnName = "rut_estudiante")
     private Estudiante estudiante;
 }

@@ -1,0 +1,67 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Ver Cuotas de Pago</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+</head>
+<body>
+<div class="container-sm">
+    <h1>Cuotas de Pago</h1>
+
+    <!-- Verificar si cuotas está vacía y mostrar mensaje -->
+    <div th:if="${cuotas.isEmpty()}">
+        <p>El usuario no tiene cuotas porque pagó al contado.</p>
+    </div>
+
+    <!-- Verificar si cuotas no está vacía y mostrar la tabla -->
+    <table class="table" th:if="${not cuotas.isEmpty()}">
+        <thead class="thead-dark">
+        <tr>
+            <th>Número de cuota</th>
+            <th>Monto de Cuota</th>
+            <th>Plazo Máximo de Pago</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="cuota, cuotasStat : ${cuotas}">
+            <td th:text="${cuotasStat.index + 1}"></td>
+            <td th:text="${cuota.montoCuota}"></td>
+            <td th:text="${cuota.plazoMaximoPago}"></td>
+            <td th:text="${cuota.pagada ? 'Pagada' : 'Pendiente'}"></td>
+            <td>
+                <!-- Agregamos un identificador único para el enlace de pago -->
+                <a th:href="@{'/pagos/pagar-cuota/' + ${cuota.idCuota} + '/' + ${cuota.estudiante.rut_estudiante}}" class="btn btn-success" th:if="${!cuota.pagada && cuotasStat.index == 0}">Pagar</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <a th:href="@{'/estudiante/listar-estudiantes'}" class="btn btn-primary">Volver a la Lista de Estudiantes</a>
+</div>
+
+</body>
+</html>
+<script>
+    // Obtener todos los enlaces de pago
+    const links = document.querySelectorAll("[th:href^='/pagos/pagar-cuota/']");
+
+    // Deshabilitar todos los enlaces
+    for (let i = 0; i < links.length; i++) {
+        links[i].classList.add("disabled"); // Agregar una clase para deshabilitar estilísticamente
+        links[i].addEventListener("click", function(event) {
+            event.preventDefault(); // Prevenir la acción predeterminada (navegación) en los enlaces deshabilitados
+        });
+    }
+
+    // Habilitar el primer enlace de pago pendiente
+    const firstPendingLink = document.querySelector("[th:href^='/pagos/pagar-cuota/'][th:if='!cuota.pagada && cuotasStat.index == 0']");
+    if (firstPendingLink) {
+        firstPendingLink.classList.remove("disabled");
+        firstPendingLink.removeEventListener("click", function(event) {
+            event.preventDefault();
+        });
+    }
+</script>

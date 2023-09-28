@@ -1,6 +1,6 @@
 package com.usach.PT1.Models;
 
-public enum EPago {
+public enum EMedioPago {
     CONTADO,
     CUOTAS
 

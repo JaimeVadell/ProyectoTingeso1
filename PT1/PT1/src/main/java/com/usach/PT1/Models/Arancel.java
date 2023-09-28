@@ -8,25 +8,28 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
-
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 @Builder
 @Entity
-@Table(name = "Pago")
-public class Pago {
+@Table(name = "Matricula")
+public class Arancel {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long idPago;
+    private long idArancel;
     @NotNull
-    private int montoPagado;
+    private EMedioPago pago;
     @NotNull
-    private LocalDate fechaPago;
+    private LocalDate fechaCreacionArancel;
     @NotNull
-    private ETipoPago tipoPago;
+    private int montoTotalArancel;
+    @NotNull
+    private int numeroCuotas;
+    @NotNull
+    private boolean estadoDePagoArancel;
 
-    @ManyToOne
+
+    @OneToOne
     @JoinColumn(name = "rut_estudiante", referencedColumnName = "rut_estudiante")
     private Estudiante estudiante;
-
 }
