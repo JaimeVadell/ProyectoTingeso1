@@ -27,6 +27,8 @@ public class DeudaService {
         Deuda deuda = Deuda.builder()
                 .montoDeuda(montoDeuda)
                 .CuotasRestantes(cuotasRestantes)
+                .cuotasConRetrasoHistorico(0)
+                .precioCuotaInicial(precioCuota)
                 .precioCuota(precioCuota)
                 .estudiante(estudiante)
                 .cuotasConRetraso(0)
@@ -39,6 +41,7 @@ public class DeudaService {
     public void actualizarDeuda(Estudiante estudiante, int montoCuotaPagado) {
         Deuda deuda = estudiante.getDeuda();
         deuda.setCuotasRestantes(deuda.getCuotasRestantes() - 1);
+        deuda.setCuotasConRetraso(0); // Si el estudiante paga una cuota, se reinicia el contador de cuotas con retraso
         if (deuda.getCuotasRestantes() == 0){
             Arancel arancel = estudiante.getArancel();
             arancel.setEstadoDePagoArancel(true);

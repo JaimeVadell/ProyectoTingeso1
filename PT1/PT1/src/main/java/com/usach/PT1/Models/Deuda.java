@@ -25,7 +25,12 @@ public class Deuda {
     @NotNull
     private int precioCuota;
     @NotNull
+    private int precioCuotaInicial;
+    @NotNull
     private int cuotasConRetraso;
+    @NotNull
+    private int cuotasConRetrasoHistorico;
+
     @OneToOne
     @JoinColumn(name = "rut_estudiante", referencedColumnName = "rut_estudiante")
     private Estudiante estudiante;

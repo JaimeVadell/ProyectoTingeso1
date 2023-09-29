@@ -1,15 +1,15 @@
 package com.usach.PT1.Services;
 
 import com.usach.PT1.Models.*;
-import com.usach.PT1.Repositories.EstudianteRepository;
-import com.usach.PT1.Repositories.ArancelRepository;
-import com.usach.PT1.Repositories.PagoRepository;
+import com.usach.PT1.Repositories.*;
 import com.usach.PT1.Utils.VerificadorRut;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,6 +29,12 @@ public class ArancelService {
 
     @Autowired
     CuotasService cuotasService;
+
+    @Autowired
+    DeudaRepository deudaRepository;
+
+    @Autowired
+    CuotasRepository cuotasRepository;
 
     public String crearMatricula(int numeroCuotas, String rutEstudiante, EMedioPago pago){
         //Verificaciones de rut y numero de cuotas
@@ -182,5 +188,63 @@ public class ArancelService {
         Arancel arancel = estudiante.getArancel();
         arancel.setEstadoDePagoArancel(true);
         arancelRepository.save(arancel);
+    }
+
+
+    public void reCalcularArancel(){
+        List <Estudiante> estudiantes = estudianteRepository.findAll();
+        for(Estudiante estudiante: estudiantes) {
+
+            if(!estudiante.getArancel().isEstadoDePagoArancel() ||!estudiante.getCuotas().isEmpty()) {
+                List<Cuota> cuotasEstudiante = estudiante.getCuotas();
+                // Ordenar cuotas por fecha de vencimiento
+                Collections.sort(cuotasEstudiante, Comparator.comparing(Cuota::getPlazoMaximoPago));
+                Optional<Cuota> cuotaMasCercana = cuotasEstudiante.stream()
+                        .filter(cuota -> !cuota.isPagada())
+                        .findFirst();
+                if (cuotaMasCercana.isEmpty()) {
+                    continue;
+                }
+                LocalDate fechaActual = LocalDate.now();
+                LocalDate fechaVencimiento = cuotaMasCercana.get().getPlazoMaximoPago();
+                if(fechaActual.isAfter(fechaVencimiento)){
+                    int diferenciaEnDias = (int) ChronoUnit.DAYS.between(fechaActual, fechaVencimiento);
+                    int mesesDeRetrasoActual = (diferenciaEnDias / 30) +1;
+                    int mesesDeRetrasoSistema = estudiante.getDeuda().getCuotasConRetraso();
+                    if(mesesDeRetrasoSistema >= mesesDeRetrasoActual){
+                        continue;
+                    }
+                    if(mesesDeRetrasoActual == 1){actuliazarDeudasyCuotas(estudiante, 3);}
+                    else if(mesesDeRetrasoActual == 2){actuliazarDeudasyCuotas(estudiante, 6);}
+                    else if(mesesDeRetrasoActual == 3){actuliazarDeudasyCuotas(estudiante, 9);}
+                    else{
+                        actuliazarDeudasyCuotas(estudiante, 15);
+                    }
+
+
+
+                }
+            }
+        }
+    }
+
+    public void actuliazarDeudasyCuotas(Estudiante estudiante, int interes){
+        Deuda deuda = estudiante.getDeuda();
+        int nuevoPrecioCuota = (deuda.getPrecioCuota() * interes) / 100;
+        deuda.setPrecioCuota(nuevoPrecioCuota);
+        deuda.setMontoDeuda(deuda.getCuotasRestantes() * nuevoPrecioCuota);
+        deuda.setCuotasConRetraso(deuda.getCuotasConRetraso() + 1);
+        deuda.setCuotasConRetrasoHistorico(deuda.getCuotasConRetrasoHistorico() + 1);
+        deudaRepository.save(deuda);
+
+        // Actuliazar cuotas
+        List<Cuota> cuotas = estudiante.getCuotas();
+        for(Cuota cuota: cuotas){
+            if(!cuota.isPagada()){
+                cuota.setMontoCuota(nuevoPrecioCuota);
+                cuotasRepository.save(cuota);
+            }
+        }
+
     }
 }
