@@ -27,4 +27,7 @@ public class Cuota {
     @ManyToOne
     @JoinColumn(name = "rut_estudiante", referencedColumnName = "rut_estudiante")
     private Estudiante estudiante;
+
+    @OneToOne(mappedBy = "cuotaPagada")
+    private Pago pago;
 }

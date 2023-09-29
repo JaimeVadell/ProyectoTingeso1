@@ -30,4 +30,5 @@ public class Deuda {
     @JoinColumn(name = "rut_estudiante", referencedColumnName = "rut_estudiante")
     private Estudiante estudiante;
 
+
 }

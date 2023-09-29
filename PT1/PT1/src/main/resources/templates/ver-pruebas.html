@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Ver Pruebas</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+    <!-- Agrega aquí tus estilos CSS si es necesario -->
+</head>
+<body>
+<div class="container">
+    <h1>Pruebas del Estudiante</h1>
+    <p>Nombre del estudiante: <span th:text="${estudiante.nombre}"></span></p>
+    <p>Apellido del estudiante: <span th:text="${estudiante.apellido}"></span></p>
+    <p>RUT del estudiante: <span th:text="${estudiante.rut_estudiante}"></span></p>
+
+    <table class="table">
+        <thead class="thead-dark">
+        <tr>
+            <th>Fecha de Prueba</th>
+            <th>Puntaje</th>
+        </tr>
+        </thead>
+        <tbody>
+        <!-- Itera sobre la lista de pruebas y muestra cada prueba en una fila de la tabla -->
+        <tr th:each="prueba : ${pruebas}">
+            <td th:text="${prueba.diaPrueba}"></td>
+            <td th:text="${prueba.puntaje}"></td>
+        </tr>
+        </tbody>
+    </table>
+
+    <a th:href="@{'/estudiante/listar-estudiantes'}" class="btn btn-primary">Volver a la Lista de Estudiantes</a>
+</div>
+</body>
+</html>

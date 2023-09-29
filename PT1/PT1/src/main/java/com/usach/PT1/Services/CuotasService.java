@@ -33,7 +33,6 @@ public class CuotasService {
         if (diaDelMes >=5) {
             //Desde el proximo mes
             plazoMaximoPago = LocalDate.of(fechaActual.getYear(), fechaActual.getMonth().plus(1), 10);
-            System.out.println("La fecha actual es posterior al día 15 del mes.");
         } else {
             //Mes actual
             plazoMaximoPago= LocalDate.of(fechaActual.getYear(), fechaActual.getMonth(), 10);

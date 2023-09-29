@@ -73,15 +73,18 @@ public class PagoService {
                 .tipoPago(ETipoPago.CUOTA_ARANCEL)
                 .fechaPago(LocalDate.now())
                 .montoPagado(cuota.getMontoCuota())
+                .cuotaPagada(cuota)
                 .build();
         List<Pago> pagosEstudiante = estudiante.getPagos();
         pagosEstudiante.add(pago);
         estudiante.setPagos(pagosEstudiante);
-        //Guardar Cambios
+        //Guardar Cambios al estudiante
         estudianteRepository.save(estudiante);
+        //Guardar Pago
         PagoRepository.save(pago);
         //Actuliazar estado de cuota
         cuota.setPagada(true);
+        cuota.setPago(pago);
         cuotasRepository.save(cuota);
         deudaService.actualizarDeuda(estudiante, cuota.getMontoCuota());
 

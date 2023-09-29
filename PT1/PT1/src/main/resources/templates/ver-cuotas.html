@@ -33,7 +33,7 @@
             <td th:text="${cuota.pagada ? 'Pagada' : 'Pendiente'}"></td>
             <td>
                 <!-- Agregamos un identificador único para el enlace de pago -->
-                <a th:href="@{'/pagos/pagar-cuota/' + ${cuota.idCuota} + '/' + ${cuota.estudiante.rut_estudiante}}" class="btn btn-success" th:if="${!cuota.pagada && cuotasStat.index == 0}">Pagar</a>
+                <a class="btn btn-success btnPagar" th:href="@{'/pagos/pagar-cuota/' + ${cuota.idCuota} + '/' + ${cuota.estudiante.rut_estudiante}}">Pagar</a>
             </td>
         </tr>
         </tbody>
@@ -45,23 +45,30 @@
 </body>
 </html>
 <script>
-    // Obtener todos los enlaces de pago
-    const links = document.querySelectorAll("[th:href^='/pagos/pagar-cuota/']");
 
-    // Deshabilitar todos los enlaces
-    for (let i = 0; i < links.length; i++) {
-        links[i].classList.add("disabled"); // Agregar una clase para deshabilitar estilísticamente
-        links[i].addEventListener("click", function(event) {
-            event.preventDefault(); // Prevenir la acción predeterminada (navegación) en los enlaces deshabilitados
-        });
+    window.onload = desabilitarBoton;
+    function desabilitarBoton() {
+        var botonesPagar = document.querySelectorAll(".btnPagar");
+        for (var i = 0; i < botonesPagar.length; i++) {
+            // Deshabilitar el botón
+            botonesPagar[i].disabled = true;
+
+            // Eliminar el manejador de eventos "click"
+            botonesPagar[i].removeEventListener("click", handleClick);
+        }
     }
 
-    // Habilitar el primer enlace de pago pendiente
-    const firstPendingLink = document.querySelector("[th:href^='/pagos/pagar-cuota/'][th:if='!cuota.pagada && cuotasStat.index == 0']");
-    if (firstPendingLink) {
-        firstPendingLink.classList.remove("disabled");
-        firstPendingLink.removeEventListener("click", function(event) {
-            event.preventDefault();
-        });
+    function handleClick(event) {
+        // Este es el manejador de eventos "click"
+        // Puedes agregar lógica adicional aquí si es necesario
+        // Por ejemplo, mostrar un mensaje de que el botón está deshabilitado
+        alert("Este botón está deshabilitado");
     }
+
+    // Agregar el manejador de eventos "click" a los botones antes de deshabilitarlos
+    var botonesPagar = document.querySelectorAll(".btnPagar");
+    for (var i = 0; i < botonesPagar.length; i++) {
+        botonesPagar[i].addEventListener("click", handleClick);
+    }
+
 </script>

@@ -8,8 +8,7 @@
 <body>
 <div class="container-sm">
   <h1>Lista de Estudiantes</h1>
-  <!-- Agrega un enlace para crear un estudiante -->
-  <a th:href="@{'/estudiante/crear-estudiante'}" class="btn btn-success">Crear Estudiante</a>
+  <a th:href="@{'/prueba/subir-prueba'}" class="btn btn-primary">Subir Prueba</a>
   <table class="table">
     <thead class="thead-dark">
     <tr>
@@ -33,16 +32,15 @@
       <td th:text="${estudiante.nombreColegio}"></td>
       <td th:text="${estudiante.anioEgreso}"></td>
       <td>
-        <!-- Verifica si el estudiante tiene matrícula -->
-        <a th:if="${estudiante.arancel != null}" th:href="@{'/arancel/ver-arancel/' + ${estudiante.rut_estudiante}}" class="btn btn-primary">Ver Arancel</a>
-        <!-- Si no tiene matrícula, muestra el botón "Crear Matrícula" -->
-        <a th:if="${estudiante.arancel == null}" th:href="@{'/arancel/crear/' + ${estudiante.rut_estudiante}}" class="btn btn-success">Crear Matrícula</a>
-
-        <!-- Agrega el botón "Ver Cuotas de Pago" si el estudiante tiene matrícula -->
-        <a th:if="${estudiante.arancel != null}" th:href="@{'/cuotas/ver-cuotas/' + ${estudiante.rut_estudiante}}" class="btn btn-info">Ver Cuotas de Pago</a>
-
-        <!-- Agrega el botón "Ver Pagos" con la ruta correspondiente -->
-        <a th:if="${estudiante.arancel != null}" th:href="@{'/pagos/ver-pagos/' + ${estudiante.rut_estudiante}}" class="btn btn-warning">Ver Pagos</a>
+        <div class="btn-group" role="group">
+          <!-- Verifica si el estudiante tiene matrícula -->
+          <a th:if="${estudiante.arancel != null}" th:href="@{'/arancel/ver-arancel/' + ${estudiante.rut_estudiante}}" class="btn btn-primary">Ver Arancel</a>
+          <!-- Agrega el botón "Ver Cuotas de Pago" si el estudiante tiene matrícula -->
+          <a th:if="${estudiante.arancel != null}" th:href="@{'/cuotas/ver-cuotas/' + ${estudiante.rut_estudiante}}" class="btn btn-info">Ver Cuotas de Pago</a>
+          <!-- Agrega el botón "Ver Pagos" con la ruta correspondiente -->
+          <a th:if="${estudiante.arancel != null}" th:href="@{'/pagos/ver-pagos/' + ${estudiante.rut_estudiante}}" class="btn btn-warning">Ver Pagos</a>
+          <a th:href="@{'/prueba/ver-pruebas/' + ${estudiante.rut_estudiante}}" class="btn btn-secondary">Ver Pruebas</a>
+        </div>
       </td>
     </tr>
     </tbody>

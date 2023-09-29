@@ -29,4 +29,9 @@ public class Pago {
     @JoinColumn(name = "rut_estudiante", referencedColumnName = "rut_estudiante")
     private Estudiante estudiante;
 
+    @OneToOne
+    @JoinColumn(name = "cuota_id", referencedColumnName = "idCuota")
+    private Cuota cuotaPagada;
+
+
 }
