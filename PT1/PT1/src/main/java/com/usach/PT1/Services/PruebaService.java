@@ -73,7 +73,7 @@ public class PruebaService {
     public void RevisarDocumentoExamen(MultipartFile archivo) {
 
 
-        //String filePath = "C:\\Users\\Jaime\\OneDrive - usach.cl\\Documents\\2023\\Semestre 2\\TINGESO\\Ejemplo Pruebas\\examen1.xlsx";
+
         try {
             InputStream fileInputStream = archivo.getInputStream();
             Workbook workbook = new XSSFWorkbook(fileInputStream);
@@ -128,6 +128,9 @@ public class PruebaService {
                 // Verificar que las fechas sean iguales
                 if (fechaBase == null) {
                     fechaBase = fecha;
+                    if(fechaBase.isAfter(LocalDate.now()) || fechaBase.isBefore(LocalDate.now().minusMonths(1))){
+                        throw new IllegalArgumentException("Error: Fecha fuera de Rango:" + fechaBase);
+                    }
                 } else if (!fecha.equals(fechaBase)) {
                     throw  new IllegalArgumentException("Error: Fechas diferentes - Rut: " + rut);
                 }
@@ -160,6 +163,10 @@ public class PruebaService {
                 System.err.println("Error: Estudiante no existe - Rut: " + rutEstudiante);
                 continue;
             }
+            if(!verificarPruebaMesEstudiante(estudiante,fecha)){
+                System.err.println("Error: Estudiante ya tiene una prueba este mes - Rut: " + rutEstudiante);
+                continue;
+            }
             Prueba prueba = Prueba.builder()
                     .diaPrueba(fecha)
                     .puntaje(puntaje)
@@ -172,6 +179,21 @@ public class PruebaService {
             estudianteRepository.save(estudiante);
         }
         System.out.println("Pruebas guardadas exitosamente");
+    }
+
+    // Falta hacer el reembolso pertinente en el caso de que el estudiante ya haya pagado
+    private boolean verificarPruebaMesEstudiante(Estudiante estudiante, LocalDate fechaPrueba){
+        List<Prueba> pruebasEstudiante = estudiante.getPruebas();
+        // Una prueba por mes de estudiante
+        for(Prueba pruebaEstudiante: pruebasEstudiante){
+            LocalDate fechaPruebaAntigua = pruebaEstudiante.getDiaPrueba();
+            int anioPruebaAntigua = fechaPruebaAntigua.getYear();
+            int mesPruebaAntigua = fechaPruebaAntigua.getMonthValue();
+            if(fechaPrueba.getYear() == anioPruebaAntigua && fechaPrueba.getMonthValue() == mesPruebaAntigua){
+                return false;
+            }
+        }
+        return true;
     }
 
 }

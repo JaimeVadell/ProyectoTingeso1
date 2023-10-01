@@ -1,0 +1,55 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Resumen del Estudiante</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+</head>
+<body>
+<div class="container-sm">
+    <h1>Resumen del Estudiante</h1>
+
+    <p>RUT del Estudiante: <span th:text="${rutEstudianteFormateado}"></span></p>
+    <p>Nombre Completo: <span th:text="${nombreCompletoEstudiante}"></span></p>
+
+    <table class="table">
+        <thead class="thead-dark">
+        <tr>
+            <th>Número de Exámenes Rendidos</th>
+            <th>Promedio de Puntaje en Pruebas</th>
+            <th>Monto Total del Arancel a Pagar</th>
+            <th>Tipo de Pago</th>
+            <th>Número de Cuotas Pactadas</th>
+            <th>Número de Cuotas Pagas</th>
+            <th>Monto Total Pagado</th>
+            <th>Fecha del Último Pago</th>
+            <th>Saldo por Pagar</th>
+            <th>Número de Cuotas con Retraso Actual</th>
+            <th>Número de Cuotas con Retraso Histórico</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td th:text="${numeroExamenesRendidos}"></td>
+            <td>
+                <span th:if="${promedioPuntajePruebas != 0}" th:text="${promedioPuntajePruebas}"></span>
+                <span th:unless="${promedioPuntajePruebas != 0}">No aplica</span>
+            </td>
+            <td th:text="${MontoTotalArancelaPagar}"></td>
+            <td th:text="${TipoPago}"></td>
+            <td th:text="${numeroCuotasPactadas}"></td>
+            <td th:text="${numeroCuotasPagas}"></td>
+            <td th:text="${MontoTotalPagado}"></td>
+            <td th:text="${fechaUltimoPago}"></td>
+            <td th:text="${SaldoPorPagar}"></td>
+            <td th:text="${numeroCuotasConRetrasoActual}"></td>
+            <td th:text="${numeroCuotasConRetrasoHistorico}"></td>
+        </tr>
+        </tbody>
+    </table>
+
+    <!-- Puedes agregar más elementos HTML aquí según sea necesario -->
+
+</div>
+</body>
+</html>

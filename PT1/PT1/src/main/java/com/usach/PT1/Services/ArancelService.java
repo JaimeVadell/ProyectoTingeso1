@@ -230,7 +230,7 @@ public class ArancelService {
 
     public void actuliazarDeudasyCuotas(Estudiante estudiante, int interes){
         Deuda deuda = estudiante.getDeuda();
-        int nuevoPrecioCuota = (deuda.getPrecioCuota() * interes) / 100;
+        int nuevoPrecioCuota = deuda.getPrecioCuota() + ((deuda.getPrecioCuota() * interes) / 100);
         deuda.setPrecioCuota(nuevoPrecioCuota);
         deuda.setMontoDeuda(deuda.getCuotasRestantes() * nuevoPrecioCuota);
         deuda.setCuotasConRetraso(deuda.getCuotasConRetraso() + 1);
@@ -245,6 +245,56 @@ public class ArancelService {
                 cuotasRepository.save(cuota);
             }
         }
+
+    }
+
+    public void actualizarDescuentosPruebaEstudiante(){
+        List <Estudiante> estudiantes = estudianteRepository.findAll();
+        for (Estudiante estudiante: estudiantes){
+            if(estudiante.getPruebas().isEmpty()){
+                continue;
+            }
+            List<Prueba> pruebasEstudiante = estudiante.getPruebas();
+            int puntajeTotalAcumulado = 0;
+            for (Prueba prueba: pruebasEstudiante){
+                puntajeTotalAcumulado += prueba.getPuntaje();
+            }
+            int promedioPuntajePruebas = Math.round(((float) puntajeTotalAcumulado)/ pruebasEstudiante.size());
+            // Si el puntaje entre 950 y 1000, 10% de descuento
+            // Si el puntaje entre 900 y 949, 5% de descuento
+            //Si el puntaje entre 850 y 899, 2% de descuento
+            if(promedioPuntajePruebas <= 849){
+                continue;
+            }
+            else if (promedioPuntajePruebas >= 950){
+                setDescuentoPruebas(estudiante, 10);
+            }
+            else if (promedioPuntajePruebas >= 900){
+                setDescuentoPruebas(estudiante, 5);
+            }
+            //Puntaje entre 850 y 899
+            else{
+                setDescuentoPruebas(estudiante, 2);
+            }
+
+        }
+    }
+
+
+    private void setDescuentoPruebas(Estudiante estudiante, int descuento){
+        List<Cuota> cuotasEstudiante = estudiante.getCuotas();
+        int montoNuevoDeuda = 0;
+        for(Cuota cuota: cuotasEstudiante){
+            if(!cuota.isPagada()){
+                cuota.setMontoCuota(cuota.getMontoCuota() - ((cuota.getMontoCuota() * descuento) / 100));
+                montoNuevoDeuda += cuota.getMontoCuota();
+                cuotasRepository.save(cuota);
+            }
+        }
+        Deuda deuda = estudiante.getDeuda();
+        deuda.setMontoDeuda(montoNuevoDeuda);
+        deudaRepository.save(deuda);
+
 
     }
 }
