@@ -8,10 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Repository
 public class ArancelService {
@@ -45,7 +42,7 @@ public class ArancelService {
             throw new IllegalArgumentException("Rut Invalido");
         }
 
-        if(numeroCuotas > 10 || numeroCuotas < 0 || (numeroCuotas < 0 && pago == EMedioPago.CONTADO)){
+        if((numeroCuotas != 0 && pago == EMedioPago.CONTADO) || (pago == EMedioPago.CUOTAS && (numeroCuotas > 10 || numeroCuotas <= 0))){
             throw new IllegalArgumentException("Numero Cuotas Invalidas");
         }
 
@@ -65,7 +62,7 @@ public class ArancelService {
             LocalDate anioEgreso = estudiante.getAnioEgreso();
             LocalDate fechaActual = LocalDate.now();
             long diferenciaEnDias = ChronoUnit.DAYS.between(anioEgreso, fechaActual);
-            double aniosDesdeEgreso = diferenciaEnDias / 365.25;
+            int aniosDesdeEgreso = (int) Math.floor(diferenciaEnDias / 365.25);
             boolean estadoArancel = false;
             int arancelEstudio = 1_500_000;
             int precioMatricula = 70_000;

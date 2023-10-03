@@ -30,6 +30,10 @@ public class EstudianteService {
 
         
     }
+    public void eliminarEstudiante(Estudiante estudiante){
+        estudianteRepository.delete(estudiante);
+    }
+
     public Optional<Estudiante> buscarEstudianteRutsinFormato(String rutEstudiante){
         Optional<Estudiante> estudianteOptional;
         VerificadorRut verificadorRut = new VerificadorRut();
@@ -40,6 +44,8 @@ public class EstudianteService {
         }
         return estudianteRepository.findById(rutEstudiante);
     }
+
+
 
 
 
