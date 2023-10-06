@@ -19,6 +19,7 @@
         <thead class="thead-dark">
         <tr>
             <th>Número de cuota</th>
+            <th>Id de la cuota</th>
             <th>Monto de Cuota</th>
             <th>Plazo Máximo de Pago</th>
             <th>Estado</th>
@@ -28,12 +29,13 @@
         <tbody>
         <tr th:each="cuota, cuotasStat : ${cuotas}">
             <td th:text="${cuotasStat.index + 1}"></td>
+            <td th:text="${cuota.idCuota}"></td>
             <td th:text="${cuota.montoCuota}"></td>
             <td th:text="${cuota.plazoMaximoPago}"></td>
             <td th:text="${cuota.pagada ? 'Pagada' : 'Pendiente'}"></td>
             <td>
                 <!-- Agregamos un identificador único para el enlace de pago -->
-                <a class="btn btn-success btnPagar" th:href="@{'/pagos/pagar-cuota/' + ${cuota.idCuota} + '/' + ${cuota.estudiante.rut_estudiante}}">Pagar</a>
+                <a class="btn btn-success btnPagar" th:href="@{'/pagos/pagar-cuota/' + ${cuota.estudiante.rut_estudiante}}">Pagar</a>
             </td>
         </tr>
         </tbody>

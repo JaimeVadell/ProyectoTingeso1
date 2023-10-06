@@ -40,6 +40,9 @@ public class DeudaService {
 
     public void actualizarDeuda(Estudiante estudiante, int montoCuotaPagado) {
         Deuda deuda = estudiante.getDeuda();
+        if (montoCuotaPagado != deuda.getPrecioCuota()){
+            throw new IllegalArgumentException("Monto no corresponde a cuota");
+        }
         deuda.setCuotasRestantes(deuda.getCuotasRestantes() - 1);
         deuda.setCuotasConRetraso(0); // Si el estudiante paga una cuota, se reinicia el contador de cuotas con retraso
         if (deuda.getCuotasRestantes() == 0){

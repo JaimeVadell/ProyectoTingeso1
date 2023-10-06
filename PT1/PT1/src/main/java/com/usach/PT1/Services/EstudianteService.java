@@ -46,8 +46,7 @@ public class EstudianteService {
     }
 
 
-
-
-
-
+    public void actualizarEstudiante(Estudiante estudiante) {
+        estudianteRepository.save(estudiante);
+    }
 }

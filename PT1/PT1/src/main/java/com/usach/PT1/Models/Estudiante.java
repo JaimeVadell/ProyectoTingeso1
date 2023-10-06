@@ -1,5 +1,8 @@
     package com.usach.PT1.Models;
     
+    import com.fasterxml.jackson.annotation.JsonBackReference;
+    import com.fasterxml.jackson.annotation.JsonIgnore;
+    import com.fasterxml.jackson.annotation.JsonManagedReference;
     import jakarta.persistence.*;
     import jakarta.validation.constraints.NotBlank;
     import jakarta.validation.constraints.NotNull;
@@ -34,17 +37,23 @@
         @NotNull
         private LocalDate anioEgreso;
 
+
+
     @OneToMany(mappedBy = "estudiante")
     private List<Prueba> pruebas;
+
 
     @OneToOne(mappedBy = "estudiante")
     private Arancel arancel;
 
+
     @OneToMany(mappedBy = "estudiante")
     private List<Pago> pagos;
 
+
     @OneToOne(mappedBy = "estudiante")
     private Deuda deuda;
+
 
     @OneToMany(mappedBy = "estudiante")
     private List<Cuota> cuotas;

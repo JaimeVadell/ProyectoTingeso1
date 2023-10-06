@@ -12,6 +12,7 @@
         <thead class="thead-dark">
         <tr>
             <th>Número de Pago</th>
+            <th>Id cuota Pagada</th>
             <th>Monto Pagado</th>
             <th>Fecha de Pago</th>
             <th>Tipo de Pago</th>
@@ -25,6 +26,7 @@
         <!-- Si el estudiante tiene pagos, muestra la tabla -->
         <tr th:each="pago, pagoStat : ${pagos}">
             <td th:text="${pagoStat.index + 1}"></td>
+            <td th:text="${pago.cuotaPagada.idCuota}"></td>
             <td th:text="${pago.montoPagado}"></td>
             <td th:text="${pago.fechaPago}"></td>
             <td th:text="${pago.tipoPago == T(com.usach.PT1.Models.ETipoPago).CUOTA_ARANCEL ? 'Pago de Arancel' : 'Pago de Matrícula'}"></td>

@@ -1,5 +1,6 @@
 package com.usach.PT1.Services;
 
+import jakarta.transaction.Transactional;
 import jakarta.validation.constraints.Null;
 import lombok.Builder;
 import lombok.Data;
@@ -30,37 +31,6 @@ public class PruebaService {
     @Autowired
     EstudianteRepository estudianteRepository;
 
-    public String AsignarPruebaEstudiante(Prueba prueba, String rutEstudiante){
-        VerificadorRut verificadorRut = new VerificadorRut();
-        rutEstudiante = verificadorRut.validarRut(rutEstudiante);
-        if(rutEstudiante.equals("")){
-            throw new IllegalArgumentException("Rut Invalido");
-        }
-        if(!estudianteRepository.existsById(rutEstudiante)){
-            throw new IllegalArgumentException("Estudiante no existe");
-        }
-        LocalDate fechaPruebaActual = prueba.getDiaPrueba();
-        int anioPruebaActual = fechaPruebaActual.getYear();
-        int mesPruebaActual = fechaPruebaActual.getMonthValue();
-
-        Estudiante estudiante = estudianteRepository.findById(rutEstudiante).get();
-        List <Prueba> pruebasEstudiante = estudiante.getPruebas();
-        for(Prueba pruebaEstudiante: pruebasEstudiante){
-            LocalDate fechaPruebaAntigua = pruebaEstudiante.getDiaPrueba();
-            int anioPruebaAntigua = fechaPruebaAntigua.getYear();
-            int mesPruebaAntigua = fechaPruebaAntigua.getMonthValue();
-            if (anioPruebaActual == anioPruebaAntigua && mesPruebaActual == mesPruebaAntigua){
-                return "Prueba Invalida: El alumno ya rindio una prueba en este mes";
-            }
-        }
-        prueba.setEstudiante(estudiante);
-        pruebaRepository.save(prueba);
-        pruebasEstudiante.add(prueba);
-        estudiante.setPruebas(pruebasEstudiante);
-        estudianteRepository.save(estudiante);
-        return "Prueba Asignada";
-
-    }
 
     @Data
     @Builder
@@ -93,8 +63,8 @@ public class PruebaService {
                 }
 
                 if (row.getPhysicalNumberOfCells() != 3) {
-                    System.err.println("Error: La fila no tiene 3 columnas.");
-                    continue; // Saltar esta fila si no tiene 3 columnas
+                    throw new IllegalArgumentException("Error: Hay una fila que tiene mas de 3 columnas.");
+
                 }
 
                 String rut = row.getCell(0).getStringCellValue();
@@ -151,7 +121,8 @@ public class PruebaService {
 
     }
 
-    private void guardarPruebasEstudiante(Map<String, PuntajeFecha> estudianteMap) {
+    @Transactional(rollbackOn = Exception.class)
+    public void guardarPruebasEstudiante(Map<String, PuntajeFecha> estudianteMap)  {
         for (Map.Entry<String, PuntajeFecha> entry : estudianteMap.entrySet()) {
             String rutEstudiante = entry.getKey();
             PuntajeFecha puntajeFecha = entry.getValue();
@@ -160,12 +131,11 @@ public class PruebaService {
             rutEstudiante = VerificadorRut.validarRut(rutEstudiante);
             Estudiante estudiante = estudianteRepository.findById(rutEstudiante).orElse(null);
             if(estudiante == null) {
-                System.err.println("Error: Estudiante no existe - Rut: " + rutEstudiante);
-                continue;
+                throw new IllegalArgumentException("Error: Estudiante no existe - Rut: " + rutEstudiante);
+
             }
             if(!verificarPruebaMesEstudiante(estudiante,fecha)){
-                System.err.println("Error: Estudiante ya tiene una prueba este mes - Rut: " + rutEstudiante);
-                continue;
+                throw new IllegalArgumentException("Error: Estudiante ya tiene una prueba este mes - Rut: " + rutEstudiante);
             }
             Prueba prueba = Prueba.builder()
                     .diaPrueba(fecha)

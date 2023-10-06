@@ -147,6 +147,7 @@ public class ArancelService {
 
 
     private void pagarMatricula(Estudiante estudiante, int precioMatricula){
+
         Pago pago = Pago.builder()
                 .fechaPago(LocalDate.now())
                 .montoPagado(precioMatricula)
@@ -160,7 +161,7 @@ public class ArancelService {
         pagoRepository.save(pago);
 
     }
-    public Optional<Arancel> obtenerArancelPorRut(String rutEstudiante) {
+/*    public Optional<Arancel> obtenerArancelPorRut(String rutEstudiante) {
         Optional<Arancel> arancelOptional = Optional.empty();
         VerificadorRut verificadorRut = new VerificadorRut();
         rutEstudiante = verificadorRut.validarRut(rutEstudiante);
@@ -178,17 +179,11 @@ public class ArancelService {
             Arancel arancel = estudiante.getArancel();
             return Optional.of(arancel);
         }
-    }
+    }*/
 
 
-    public void arancelPagado(Estudiante estudiante) {
-        Arancel arancel = estudiante.getArancel();
-        arancel.setEstadoDePagoArancel(true);
-        arancelRepository.save(arancel);
-    }
 
-
-    public void reCalcularArancel(){
+    public void reCalcularArancel(LocalDate fechaActual){
         List <Estudiante> estudiantes = estudianteRepository.findAll();
         for(Estudiante estudiante: estudiantes) {
 
@@ -202,10 +197,9 @@ public class ArancelService {
                 if (cuotaMasCercana.isEmpty()) {
                     continue;
                 }
-                LocalDate fechaActual = LocalDate.now();
                 LocalDate fechaVencimiento = cuotaMasCercana.get().getPlazoMaximoPago();
                 if(fechaActual.isAfter(fechaVencimiento)){
-                    int diferenciaEnDias = (int) ChronoUnit.DAYS.between(fechaActual, fechaVencimiento);
+                    int diferenciaEnDias = (int) ChronoUnit.DAYS.between(fechaVencimiento,fechaActual);
                     int mesesDeRetrasoActual = (diferenciaEnDias / 30) +1;
                     int mesesDeRetrasoSistema = estudiante.getDeuda().getCuotasConRetraso();
                     if(mesesDeRetrasoSistema >= mesesDeRetrasoActual){
@@ -223,9 +217,11 @@ public class ArancelService {
                 }
             }
         }
+        System.out.println("hola");
     }
 
-    public void actuliazarDeudasyCuotas(Estudiante estudiante, int interes){
+    private void actuliazarDeudasyCuotas(Estudiante estudiante, int interes){
+
         Deuda deuda = estudiante.getDeuda();
         int nuevoPrecioCuota = deuda.getPrecioCuota() + ((deuda.getPrecioCuota() * interes) / 100);
         deuda.setPrecioCuota(nuevoPrecioCuota);
@@ -235,6 +231,7 @@ public class ArancelService {
         deudaRepository.save(deuda);
 
         // Actuliazar cuotas
+
         List<Cuota> cuotas = estudiante.getCuotas();
         for(Cuota cuota: cuotas){
             if(!cuota.isPagada()){

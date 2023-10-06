@@ -2,6 +2,7 @@ package com.usach.PT1.Services;
 
 import com.usach.PT1.Models.ETipoColegio;
 import com.usach.PT1.Models.Estudiante;
+import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

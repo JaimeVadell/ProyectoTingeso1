@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class PagoService {
@@ -24,56 +25,27 @@ public class PagoService {
     CuotasRepository cuotasRepository;
     @Autowired
     DeudaService deudaService;
+    @Autowired
+    EstudianteService estudianteService;
 
-    public void RealiazarPago(int montoPagoEstudiante, String rutEstudiante) {
-        VerificadorRut verificadorRut = new VerificadorRut();
-        rutEstudiante = verificadorRut.validarRut(rutEstudiante);
-        if (rutEstudiante.equals("")) {
-            throw new IllegalArgumentException("Rut Invalido");
-        }
-        if (montoPagoEstudiante <= 0) {
-            throw new IllegalArgumentException("Monto Invalido");
-        }
-        Estudiante estudiante = estudianteRepository.findById(rutEstudiante).get();
-        if (estudiante.getArancel() == null) {
-            throw new IllegalArgumentException("Estudiante no tiene matricula");
-        }
-        if (estudiante.getDeuda().getPrecioCuota() == 0 || estudiante.getDeuda().getCuotasRestantes() == 0) {
-            throw new IllegalArgumentException("Estudiante no tiene deuda");
-        }
-        int cuotaMensual = estudiante.getDeuda().getPrecioCuota();
-        if (montoPagoEstudiante != cuotaMensual) {
-            throw new IllegalArgumentException("Monto no corresponde a cuota");
-        }
-        Pago pago = Pago.builder()
-                .montoPagado(montoPagoEstudiante)
-                .estudiante(estudiante)
-                .fechaPago(LocalDate.now())
-                .build();
 
-        // Actualizar Pagos
-        List<Pago> pagosEstudiante = estudiante.getPagos();
-        pagosEstudiante.add(pago);
-        estudiante.setPagos(pagosEstudiante);
-        estudianteRepository.save(estudiante);
-        PagoRepository.save(pago);
-
-        // Actualizar Deuda
-        Deuda deuda = estudiante.getDeuda();
-        deuda.setCuotasRestantes(deuda.getCuotasRestantes() -1);
-        deuda.setMontoDeuda(deuda.getMontoDeuda() - montoPagoEstudiante);
-        deudaRepository.save(deuda);
-    }
-
-    public void pagarCuota(Cuota cuota) {
-        Estudiante estudiante = cuota.getEstudiante();
+    public void pagarCuota(String rutEstudiante) {
+        Estudiante estudiante = estudianteService.buscarEstudianteRutsinFormato(rutEstudiante).orElse(null);
+        if(estudiante == null){
+            throw new IllegalArgumentException("Estudiante no existe");
+        }
+        List<Cuota> cuotasEstudianteSinPagar = cuotasRepository.findByEstudianteAndPagadaIsFalseOrderByPlazoMaximoPagoAsc(estudiante);
+        if (cuotasEstudianteSinPagar.isEmpty()) {
+            throw new IllegalArgumentException("Estudiante no tiene cuotas pendientes");
+        }
+        Cuota cuotaCorrespondiente = cuotasEstudianteSinPagar.get(0);
         // Generar Pago
         Pago pago = Pago.builder()
                 .estudiante(estudiante)
                 .tipoPago(ETipoPago.CUOTA_ARANCEL)
                 .fechaPago(LocalDate.now())
-                .montoPagado(cuota.getMontoCuota())
-                .cuotaPagada(cuota)
+                .montoPagado(cuotaCorrespondiente.getMontoCuota())
+                .cuotaPagada(cuotaCorrespondiente)
                 .build();
         List<Pago> pagosEstudiante = estudiante.getPagos();
         pagosEstudiante.add(pago);
@@ -83,10 +55,10 @@ public class PagoService {
         //Guardar Pago
         PagoRepository.save(pago);
         //Actuliazar estado de cuota
-        cuota.setPagada(true);
-        cuota.setPago(pago);
-        cuotasRepository.save(cuota);
-        deudaService.actualizarDeuda(estudiante, cuota.getMontoCuota());
+        cuotaCorrespondiente.setPagada(true);
+        cuotaCorrespondiente.setPago(pago);
+        cuotasRepository.save(cuotaCorrespondiente);
+        deudaService.actualizarDeuda(estudiante, cuotaCorrespondiente.getMontoCuota());
 
     }
 }
