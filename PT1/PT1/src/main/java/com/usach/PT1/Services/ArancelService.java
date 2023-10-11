@@ -217,7 +217,6 @@ public class ArancelService {
                 }
             }
         }
-        System.out.println("hola");
     }
 
     private void actuliazarDeudasyCuotas(Estudiante estudiante, int interes){
@@ -275,7 +274,7 @@ public class ArancelService {
     }
 
 
-    private void setDescuentoPruebas(Estudiante estudiante, int descuento){
+    public void setDescuentoPruebas(Estudiante estudiante, int descuento){
         List<Cuota> cuotasEstudiante = estudiante.getCuotas();
         int montoNuevoDeuda = 0;
         for(Cuota cuota: cuotasEstudiante){

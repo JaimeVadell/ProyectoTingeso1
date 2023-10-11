@@ -122,7 +122,12 @@ public class ArancelServiceTest2 {
     }
 
     @Test
-    void CalcularMesAtrasoPagoMesAtraso(){
+    void actuliazarDescuentosPrueba(){
+        arancelService.actualizarDescuentosPruebaEstudiante();
+    }
+
+    @Test
+    void setDescuentoPruebas(){
         Estudiante estudiante = Estudiante.builder()
                 .rut_estudiante("20.107.536-K")
                 .nombre("Jaime")
@@ -136,18 +141,9 @@ public class ArancelServiceTest2 {
         estudiante.setCuotas(new ArrayList<>());
         estudianteService.CrearEstudiante(estudiante);
 
-        arancelService.crearMatricula(4, estudiante.getRut_estudiante(), EMedioPago.CUOTAS); // 1_380_000 // Precio Cuota = 345_000
+        arancelService.crearMatricula(4, estudiante.getRut_estudiante(), EMedioPago.CUOTAS);
         estudiante = estudianteService.buscarEstudianteRutsinFormato("20107536K").orElse(null);
-        System.out.println(estudiante.getCuotas().get(1).getPlazoMaximoPago());
-        arancelService.reCalcularArancel(LocalDate.of(2023, 11, 25));
-        pagoService.pagarCuota("20.107.536-K");
-
-         arancelService.reCalcularArancel(LocalDate.of(2023, 12, 25));
-        System.out.println("hola");
-
-        //System.out.println(estudiante.getCuotas().get(1).getMontoCuota());
-
-
+        arancelService.setDescuentoPruebas(estudiante, 2);
     }
 
 
