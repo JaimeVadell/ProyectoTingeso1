@@ -6,3 +6,5 @@
 # Datasource local storage ignored files
 /dataSources/
 /dataSources.local.xml
+# Archivos específicos de MySQL
+PT1/PT1/data/db/mysql.sock
