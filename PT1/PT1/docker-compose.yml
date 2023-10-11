@@ -14,7 +14,7 @@ services:
     container_name: proyectotingeso1
     image: jaimevadell/proyectotingeso1
     ports:
-      - "8080:8080"
+      - "8090:8090"
     environment:
       - SPRING_DATASOURCE_URL=jdbc:mysql://mysql-db:3306/pt1?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true&useSSL=false
       - SPRING_DATASOURCE_USERNAME=root
