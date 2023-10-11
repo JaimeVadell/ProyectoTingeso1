@@ -1,0 +1,49 @@
+pipeline{
+    agent any
+    tools{
+        maven "maven"
+    }
+    stages{
+        stage("Build JAR File"){
+            steps{
+                checkout scmGit(branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/JaimeVadell/ProyectoTingeso1']])
+                dir("PT1/PT1"){
+                    sh "mvn clean install"
+                }
+            }
+        }
+        stage("Test"){
+            steps{
+                dir("PT1/PT1"){
+                    sh "mvn test"
+                }
+            }
+        }
+        stage("Build Docker Image"){
+            steps{
+                dir("PT1/PT1"){
+                    sh "docker build -t jaimevadell/proyectotingeso1 ."
+                }
+            }
+        }
+        stage("Push Docker Image"){
+            steps{
+                dir("PT1/PT1"){
+                    withCredentials([string(credentialsId: 'dckrhubpassword', variable: 'dckpass')]) {
+                        sh "docker login -u jaimevadell -p ${dckpass}"
+                    }
+                    sh "docker push jaimevadell/proyectotingeso1"
+                    
+                }
+                
+            }
+        }
+    }
+    post{
+        always{
+            dir("PT1/PT1"){
+                sh "docker logout"
+            }
+        }
+    }
+}
