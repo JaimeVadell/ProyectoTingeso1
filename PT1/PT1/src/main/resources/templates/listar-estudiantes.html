@@ -45,11 +45,14 @@
           <!-- Agrega el botón para mostrar el resumen del estudiante -->
           <a th:if="${estudiante.arancel != null}" th:href="@{'/resumen-estudiante/' + ${estudiante.rut_estudiante}}" class="btn btn-success">Ver Resumen del Estudiante</a>
 
+          <a th:if="${estudiante.arancel != null}" th:href="@{'/reembolso/ver-reembolso/' + ${estudiante.rut_estudiante}}" class="btn btn-success">Ver Reembolsos Estudiante</a>
         </div>
       </td>
     </tr>
     </tbody>
   </table>
+  <a th:href="@{'/arancel/actualizar-aranceles'}" class="btn btn-primary">Actualizar Aranceles</a>
+  <a th:href="@{'/arancel/recalcularArancelPrueba'}" class="btn btn-info">Actualizar Descuentos Examenes</a>
 </div>
 </body>
 </html>

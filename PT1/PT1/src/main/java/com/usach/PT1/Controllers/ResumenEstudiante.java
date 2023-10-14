@@ -55,9 +55,19 @@ public class ResumenEstudiante {
         int MontoTotalPagado = estudiante.getPagos().stream().filter(pago -> pago.getTipoPago().equals(ETipoPago.CUOTA_ARANCEL)).mapToInt(Pago::getMontoPagado).sum(); // Mostrar en la vista
         LocalDate fechaUltimoPago = estudiante.getPagos().stream().filter(pago -> pago.getTipoPago().equals(ETipoPago.CUOTA_ARANCEL))
                 .map(Pago::getFechaPago).max(LocalDate::compareTo).orElse(null); // Mostrar en la vista
-        int SaldoPorPagar = estudiante.getDeuda().getMontoDeuda(); // Mostrar en la vista
-        int numeroCuotasConRetrasoActual = estudiante.getDeuda().getCuotasConRetraso(); // Mostrar en la vista
-        int numeroCuotasConRetrasoHistorico = estudiante.getDeuda().getCuotasConRetrasoHistorico(); // Mostrar en la vista
+        int SaldoPorPagar;
+        int numeroCuotasConRetrasoActual;
+        int numeroCuotasConRetrasoHistorico;
+        if (estudiante.getDeuda() == null){
+            SaldoPorPagar = 0;
+            numeroCuotasConRetrasoActual = 0;
+            numeroCuotasConRetrasoHistorico = 0;
+        }
+        else{
+            SaldoPorPagar = estudiante.getDeuda().getMontoDeuda(); // Mostrar en la vista
+            numeroCuotasConRetrasoActual = estudiante.getDeuda().getCuotasConRetraso(); // Mostrar en la vista
+            numeroCuotasConRetrasoHistorico = estudiante.getDeuda().getCuotasConRetrasoHistorico(); // Mostrar en la vista
+        }
 
         // Agregar al model
         model.addAttribute("rutEstudianteFormateado", rutEstudianteFormateado);

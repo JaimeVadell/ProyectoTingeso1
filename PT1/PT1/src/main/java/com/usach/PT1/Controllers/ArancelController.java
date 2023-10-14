@@ -10,10 +10,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.Optional;
 
 @Controller
 @RequestMapping("/arancel")
+@SessionAttributes("lastDate")
 public class ArancelController {
 
     @Autowired
@@ -21,6 +23,8 @@ public class ArancelController {
 
     @Autowired
     ArancelService arancelService;
+
+    LocalDate fechaActual = LocalDate.now();
 
     @GetMapping("/crear/{rutEstudiante}")
     public String mostrarFormularioMatricula(@PathVariable String rutEstudiante, Model model) {
@@ -63,4 +67,30 @@ public class ArancelController {
         model.addAttribute("arancel", arancel);
         return "ver-arancel"; // Nombre de la plantilla Thymeleaf para mostrar el arancel
     }
+
+    @GetMapping("/actualizar-aranceles")
+    public String actualizarArancelesVista(){
+        return "actualizar-aranceles";
+    }
+
+    @PostMapping("/actualizar-aranceles")
+    public String actualizarAranceles(@RequestParam("fechaAranceles") LocalDate fechaAranceles) {
+        arancelService.reCalcularArancel(fechaAranceles);
+        return "redirect:/estudiante/listar-estudiantes"; // Redirige a la página de lista de aranceles u otra página apropiada
+    }
+
+    @GetMapping("/recalcularArancelPrueba")
+    public String recalcularArancelPrueba(){
+        if (LocalDate.now().getYear() == fechaActual.getYear() && LocalDate.now().getMonthValue() == fechaActual.getMonthValue() && LocalDate.now().getDayOfMonth() == fechaActual.getDayOfMonth()){
+            arancelService.actualizarDescuentosPruebaEstudiante();
+            fechaActual = LocalDate.now().plusMonths(1);
+            System.out.println("Se actualizó el arancel de prueba");
+        }
+        else{
+            System.out.println("No se actualizó el arancel de prueba");
+        }
+
+        return "actualizar-descuentos-pruebas"; // Redirige a la página de lista de aranceles u otra página apropiada
+    }
+
 }

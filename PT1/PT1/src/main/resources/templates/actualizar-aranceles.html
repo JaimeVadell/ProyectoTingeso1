@@ -1,0 +1,21 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Actualizar Aranceles</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+</head>
+<body>
+<div class="container-sm">
+  <h1>Actualizar Aranceles</h1>
+
+  <form method="post" th:action="@{/arancel/actualizar-aranceles}">
+    <div class="form-group">
+      <label for="fechaAranceles">Fecha para Actualizar Aranceles:</label>
+      <input type="date" class="form-control" id="fechaAranceles" name="fechaAranceles" required>
+    </div>
+    <button type="submit" class="btn btn-primary">Actualizar Aranceles</button>
+  </form>
+</div>
+</body>
+</html>

@@ -1,0 +1,29 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Ver Reembolso</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+</head>
+<body>
+<div class="container-sm">
+  <h1>Ver Reembolso</h1>
+
+  <!-- Verifica si el reembolso no está cobrado y el monto es mayor que 0 -->
+  <div th:if="${reembolso != null and reembolso.montoReembolso > 0}">
+    <a th:href="@{'/reembolso/reclamar-reembolso/' + ${rutEstudiante}}" class="btn btn-primary">Reclamar Reembolso</a>
+  </div>
+  <!-- Muestra información sobre el reembolso si no es nulo y el monto es mayor que 0 -->
+  <div th:if="${reembolso != null}">
+    <p>Información del reembolso:</p>
+    <p>Monto: <span th:text="${reembolso.montoReembolso}"></span></p>
+  </div>
+
+  <div th:if="${reembolso == null}">
+    <p>Estudiante sin reembolso</p>
+  </div>
+
+  <a th:href="@{'/estudiante/listar-estudiantes'}" class="btn btn-primary">Volver a la Lista de Estudiantes</a>
+</div>
+</body>
+</html>

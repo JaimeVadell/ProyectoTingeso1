@@ -1,0 +1,32 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>TopEducation</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+  <style>
+    /* Personaliza el estilo del título y los botones */
+    .jumbotron {
+      text-align: center;
+      padding: 2rem;
+    }
+
+    .btn-lg {
+      font-size: 1.5rem;
+    }
+  </style>
+</head>
+<body>
+<div class="container-sm">
+  <div class="jumbotron">
+    <h1 class="display-4">TopEducation</h1>
+
+    <!-- Botón para crear un estudiante -->
+    <a th:href="@{'/estudiante/crear-estudiante'}" class="btn btn-primary btn-lg">Crear Estudiante</a>
+
+    <!-- Botón para listar estudiantes -->
+    <a th:href="@{'/estudiante/listar-estudiantes'}" class="btn btn-primary btn-lg">Listar Estudiantes</a>
+  </div>
+</div>
+</body>
+</html>

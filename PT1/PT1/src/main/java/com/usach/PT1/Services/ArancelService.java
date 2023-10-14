@@ -33,6 +33,9 @@ public class ArancelService {
     @Autowired
     CuotasRepository cuotasRepository;
 
+    @Autowired
+    ReembolsoService reembolsoService;
+
     public String crearMatricula(int numeroCuotas, String rutEstudiante, EMedioPago pago){
         //Verificaciones de rut y numero de cuotas
         VerificadorRut verificadorRut = new VerificadorRut();
@@ -275,6 +278,13 @@ public class ArancelService {
 
 
     public void setDescuentoPruebas(Estudiante estudiante, int descuento){
+        if (estudiante.getArancel() == null){
+            return;
+        }
+        if(estudiante.getArancel().getPago() == EMedioPago.CONTADO){
+            reembolsoService.anadirActualizarReembolsoEstudiante(estudiante, estudiante.getArancel().getMontoTotalArancel() * descuento / 100);
+            return;
+        }
         List<Cuota> cuotasEstudiante = estudiante.getCuotas();
         int montoNuevoDeuda = 0;
         for(Cuota cuota: cuotasEstudiante){
@@ -287,7 +297,6 @@ public class ArancelService {
         Deuda deuda = estudiante.getDeuda();
         deuda.setMontoDeuda(montoNuevoDeuda);
         deudaRepository.save(deuda);
-
 
     }
 }

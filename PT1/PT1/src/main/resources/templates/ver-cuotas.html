@@ -14,6 +14,9 @@
         <p>El usuario no tiene cuotas porque pagó al contado.</p>
     </div>
 
+    <!-- Botón de pago cuota siguiente -->
+    <a class="btn btn-success btnPagarCuotaSiguiente" th:if="${not cuotas.isEmpty()}" th:href="@{'/pagos/pagar-cuota/' + ${rutEstudiante}}">Pagar cuota siguiente</a>
+
     <!-- Verificar si cuotas no está vacía y mostrar la tabla -->
     <table class="table" th:if="${not cuotas.isEmpty()}">
         <thead class="thead-dark">
@@ -34,8 +37,7 @@
             <td th:text="${cuota.plazoMaximoPago}"></td>
             <td th:text="${cuota.pagada ? 'Pagada' : 'Pendiente'}"></td>
             <td>
-                <!-- Agregamos un identificador único para el enlace de pago -->
-                <a class="btn btn-success btnPagar" th:href="@{'/pagos/pagar-cuota/' + ${cuota.estudiante.rut_estudiante}}">Pagar</a>
+                <!-- No se muestra ningún botón de pago aquí -->
             </td>
         </tr>
         </tbody>
@@ -46,31 +48,3 @@
 
 </body>
 </html>
-<script>
-
-    window.onload = desabilitarBoton;
-    function desabilitarBoton() {
-        var botonesPagar = document.querySelectorAll(".btnPagar");
-        for (var i = 0; i < botonesPagar.length; i++) {
-            // Deshabilitar el botón
-            botonesPagar[i].disabled = true;
-
-            // Eliminar el manejador de eventos "click"
-            botonesPagar[i].removeEventListener("click", handleClick);
-        }
-    }
-
-    function handleClick(event) {
-        // Este es el manejador de eventos "click"
-        // Puedes agregar lógica adicional aquí si es necesario
-        // Por ejemplo, mostrar un mensaje de que el botón está deshabilitado
-        alert("Este botón está deshabilitado");
-    }
-
-    // Agregar el manejador de eventos "click" a los botones antes de deshabilitarlos
-    var botonesPagar = document.querySelectorAll(".btnPagar");
-    for (var i = 0; i < botonesPagar.length; i++) {
-        botonesPagar[i].addEventListener("click", handleClick);
-    }
-
-</script>
